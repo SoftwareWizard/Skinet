@@ -23,6 +23,7 @@ namespace API
                 {
                     var context = services.GetRequiredService<StoreContext>();
                     await context.Database.MigrateAsync();
+                    await StoreContextSeed.Seed(context, loggerFactory);
                 }
                 catch (Exception exception)
                 {
