@@ -12,7 +12,7 @@ namespace Core.Entities
 
         public ProductType ProductType { get; set; }
 
-        public int ProdcutTypeId { get; set; }
+        public int ProductTypeId { get; set; }
 
         public ProductBrand ProductBrand { get; set; }
 
