@@ -13,6 +13,11 @@ namespace Infrastructure.Data
         private readonly StoreContext _context;
         public GenericRepository(StoreContext context) => _context = context;
 
+        public async Task<int> Count(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
+
         public async Task<T> GetById(int id) => await _context.Set<T>().FindAsync(id);
 
         public async Task<T> GetEntityWithSpec(ISpecification<T> spec) => await ApplySpecification(spec).FirstOrDefaultAsync();
