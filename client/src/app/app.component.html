@@ -1,4 +1,8 @@
 <app-nav-bar></app-nav-bar>
 <div class="container content">
    <h1>Welcome to {{ title }} Application</h1>
+
+   <ul>
+      <li *ngFor="let product of pagination.data" >{{ product.name }}</li>
+   </ul>
 </div>

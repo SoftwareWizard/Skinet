@@ -39,7 +39,7 @@ namespace API.Controllers
             var products = await _productRepository.List(spec);
             var productDtos = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDto>>(products);
             var pagination = new Pagination<ProductDto>(productParams.PageIndex, productParams.PageSize, totalItems, productDtos);
-            return Ok(productDtos);
+            return Ok(pagination);
         }
 
         [HttpGet("{id}")]
