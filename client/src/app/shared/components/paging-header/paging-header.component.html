@@ -1,0 +1,8 @@
+<header>
+   <span *ngIf="hasItems"
+      >Showing
+      <strong>{{ firstIndex }} - {{ lastIndex }}</strong>
+      of <strong>{{ totalCount }}</strong> Results.</span
+   >
+   <span *ngIf="!hasItems">There are <strong>0</strong> results for this filter.</span>
+</header>
