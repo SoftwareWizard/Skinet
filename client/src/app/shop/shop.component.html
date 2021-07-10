@@ -10,21 +10,13 @@
          <hr />
          <h5 class="text-warning ml-3">Brands</h5>
          <ul class="list-group">
-            <li class="list-group-item active">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
+            <li *ngFor="let brand of brands" class="list-group-item" onclick="onBrandSelected(brand.id)">{{ brand.name }}</li>
          </ul>
          <hr />
          <h5 class="text-warning ml-3">Types</h5>
          <ul class="list-group">
-            <li class="list-group-item active">Cras justo odio</li>
-            <li class="list-group-item">Dapibus ac facilisis in</li>
-            <li class="list-group-item">Morbi leo risus</li>
-            <li class="list-group-item">Porta ac consectetur ac</li>
-            <li class="list-group-item">Vestibulum at eros</li>
-         </ul>
+          <li *ngFor="let type of types" class="list-group-item">{{ type.name }}</li>
+        </ul>
       </div>
 
       <div class="col-9">
@@ -40,7 +32,11 @@
          </div>
 
          <div class="row">
-            <app-product-item *ngFor="let product of products" class="col-md-4" [product]="product"></app-product-item>
+            <app-product-item
+               *ngFor="let product of products"
+               class="col-md-4"
+               [product]="product"
+            ></app-product-item>
          </div>
       </div>
    </div>
