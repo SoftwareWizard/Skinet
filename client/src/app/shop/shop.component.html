@@ -55,11 +55,13 @@
          <div class="d-flex justify-content-center">
             <pagination
                [boundaryLinks]="true"
-               [totalItems]="77"
+               [totalItems]="this.totalCount"
+               [itemsPerPage]="this.shopParams.pageSize"
                previousText="&lsaquo;"
                nextText="&rsaquo;"
                firstText="&laquo;"
                lastText="&raquo;"
+               (pageChanged)="onPageChanged($event)"
             >
             </pagination>
          </div>

@@ -1,9 +1,10 @@
-import { ShopParams } from './../models/shopParams';
-import { IProductBrand } from './../models/product-brand';
+import { ShopParams } from '../shared/models/shopParams';
+import { IProductBrand } from '../shared/models/product-brand';
 import { ShopService } from './shop.service';
 import { Component, OnInit } from '@angular/core';
-import { IProduct } from '../models/product';
-import { IProductType } from '../models/product-type';
+import { IProduct } from '../shared/models/product';
+import { IProductType } from '../shared/models/product-type';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
    selector: 'app-shop',
@@ -16,6 +17,7 @@ export class ShopComponent implements OnInit {
    public brands: IProductBrand[] = [];
 
    public shopParams = new ShopParams();
+   public totalCount: number = 0;
 
    public sortOptions = [
       { name: 'Alphabetical', value: 'name' },
@@ -34,6 +36,7 @@ export class ShopComponent implements OnInit {
    private async getProducts(): Promise<void> {
       let pagination = await this.shopService.getProducts(this.shopParams).toPromise();
       this.products = pagination.data;
+      this.totalCount = pagination.count;
    }
 
    private async getTypes(): Promise<void> {
@@ -59,5 +62,10 @@ export class ShopComponent implements OnInit {
    async onSortSelected(sort: string) {
       this.shopParams.sort = sort;
       await this.getProducts();
+   }
+
+   async onPageChanged(event: PageChangedEvent) {
+     this.shopParams.pageNumber = event.page;
+     await this.getProducts();
    }
   }
