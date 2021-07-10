@@ -1,15 +1,19 @@
+import { ShopService } from './shop.service';
 import { Component, OnInit } from '@angular/core';
+import { IProduct } from '../models/product';
 
 @Component({
-  selector: 'app-shop',
-  templateUrl: './shop.component.html',
-  styleUrls: ['./shop.component.scss']
+   selector: 'app-shop',
+   templateUrl: './shop.component.html',
+   styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
+   public products : IProduct[] = [];
 
-  constructor() { }
+   constructor(private shopService: ShopService) {}
 
-  ngOnInit(): void {
-  }
-
+   async ngOnInit(): Promise<void> {
+      var pagination = await this.shopService.getProducts().toPromise();
+      this.products = pagination.data;
+   }
 }
