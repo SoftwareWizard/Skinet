@@ -13,7 +13,7 @@ export class ShopService {
 
    constructor(private http: HttpClient) {}
 
-   public getProducts(brandId?: number, typeId?: number): Observable<IPagination> {
+   public getProducts(brandId?: number, typeId?: number, sort?: string): Observable<IPagination> {
       let params = new HttpParams();
 
       params = params.append('pageSize', 50);
@@ -24,6 +24,10 @@ export class ShopService {
 
       if (typeId) {
          params = params.append('typeId', typeId.toString());
+      }
+
+      if (sort) {
+         params = params.append('sort', sort);
       }
 
       return this.http.get<IPagination>(`${this.baseUrl}/products`, { params });

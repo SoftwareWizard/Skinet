@@ -17,6 +17,13 @@ export class ShopComponent implements OnInit {
    public selectedBrandId: number = 0;
    public selectedTypeId: number = 0;
 
+   public selectedSort = 'name';
+   public sortOptions = [
+      { name: 'Alphabetical', value: 'name' },
+      { name: 'Price: Low to High', value: 'priceAsc' },
+      { name: 'Price: High to Low', value: 'priceDesc' },
+   ];
+
    constructor(private shopService: ShopService) {}
 
    async ngOnInit(): Promise<void> {
@@ -27,7 +34,7 @@ export class ShopComponent implements OnInit {
 
    private async getProducts(): Promise<void> {
       let pagination = await this.shopService
-         .getProducts(this.selectedBrandId, this.selectedTypeId)
+         .getProducts(this.selectedBrandId, this.selectedTypeId, this.selectedSort)
          .toPromise();
       this.products = pagination.data;
    }
@@ -49,6 +56,11 @@ export class ShopComponent implements OnInit {
 
    async onTypeSelected(id: number): Promise<void> {
       this.selectedTypeId = id;
+      await this.getProducts();
+   }
+
+   async onSortSelected(sort: string) {
+      this.selectedSort = sort;
       await this.getProducts();
    }
 }
