@@ -14,8 +14,8 @@ export class ShopComponent implements OnInit {
    public types: IProductType[] = [];
    public brands: IProductBrand[] = [];
 
-   public selectedBrandId: number = 1;
-   public selectedTypeId: number = 1;
+   public selectedBrandId: number = 0;
+   public selectedTypeId: number = 0;
 
    constructor(private shopService: ShopService) {}
 
@@ -42,8 +42,13 @@ export class ShopComponent implements OnInit {
       this.brands = [{ id: 0, name: 'All' }, ...this.brands];
    }
 
-   async onBrandSelected(brandId: number): Promise<void> {
-      this.selectedBrandId = brandId;
+   async onBrandSelected(id: number): Promise<void> {
+      this.selectedBrandId = id;
+      await this.getProducts();
+   }
+
+   async onTypeSelected(id: number): Promise<void> {
+      this.selectedTypeId = id;
       await this.getProducts();
    }
 }

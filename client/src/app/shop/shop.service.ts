@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProductBrand } from '../models/product-brand';
 import { IProductType } from '../models/product-type';
+
 @Injectable({
    providedIn: 'root',
 })
@@ -15,14 +16,14 @@ export class ShopService {
    public getProducts(brandId?: number, typeId?: number): Observable<IPagination> {
       let params = new HttpParams();
 
-      params.append('pageSize', 50);
+      params = params.append('pageSize', 50);
 
       if (brandId) {
-         params.append('typeId', brandId.toString());
+         params = params.append('brandId', brandId.toString());
       }
 
       if (typeId) {
-         params.append('brandId', typeId.toString());
+         params = params.append('typeId', typeId.toString());
       }
 
       return this.http.get<IPagination>(`${this.baseUrl}/products`, { params });
