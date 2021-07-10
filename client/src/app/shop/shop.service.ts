@@ -17,8 +17,6 @@ export class ShopService {
    public getProducts(shopParams: ShopParams): Observable<IPagination> {
       let params = new HttpParams();
 
-      params = params.append('pageSize', shopParams.pageSize);
-
       if (shopParams.brandId !== 0) {
          params = params.append('brandId', shopParams.brandId.toString());
       }
