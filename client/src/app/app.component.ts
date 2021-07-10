@@ -1,4 +1,3 @@
-import { IProduct } from './models/product';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IPagination } from './models/pagination';
