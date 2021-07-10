@@ -13,7 +13,7 @@
             <li
                *ngFor="let brand of brands"
                class="list-group-item"
-               [class.active]="brand.id === this.selectedBrandId"
+               [class.active]="brand.id === this.shopParams.brandId"
                [value]="brand.id"
                (click)="onBrandSelected(brand.id)"
             >
@@ -26,7 +26,7 @@
             <li
                *ngFor="let type of types"
                class="list-group-item"
-               [class.active]="type.id === this.selectedTypeId"
+               [class.active]="type.id === this.shopParams.typeId"
                [value]="type.id"
                (click)="onTypeSelected(type.id)"
             >
@@ -37,9 +37,6 @@
 
       <div class="col-9">
          <div class="d-flex justify-content-between align-items-center pb-2">
-            <header>
-               <span>Showing <strong>10</strong> of <strong>16</strong> Results</span>
-            </header>
             <div class="form-inline mt-2">
                <input type="text" class="form-control input-search mr-2" placeholder="Search" />
                <div class="btn btn-outline-primary mr-2">Search</div>
@@ -53,6 +50,18 @@
                class="col-md-4"
                [product]="product"
             ></app-product-item>
+         </div>
+
+         <div class="d-flex justify-content-center">
+            <pagination
+               [boundaryLinks]="true"
+               [totalItems]="77"
+               previousText="&lsaquo;"
+               nextText="&rsaquo;"
+               firstText="&laquo;"
+               lastText="&raquo;"
+            >
+            </pagination>
          </div>
       </div>
    </div>

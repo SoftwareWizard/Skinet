@@ -1,3 +1,4 @@
+import { ShopParams } from './../models/shopParams';
 import { IProductBrand } from './../models/product-brand';
 import { ShopService } from './shop.service';
 import { Component, OnInit } from '@angular/core';
@@ -14,10 +15,8 @@ export class ShopComponent implements OnInit {
    public types: IProductType[] = [];
    public brands: IProductBrand[] = [];
 
-   public selectedBrandId: number = 0;
-   public selectedTypeId: number = 0;
+   public shopParams = new ShopParams();
 
-   public selectedSort = 'name';
    public sortOptions = [
       { name: 'Alphabetical', value: 'name' },
       { name: 'Price: Low to High', value: 'priceAsc' },
@@ -33,9 +32,7 @@ export class ShopComponent implements OnInit {
    }
 
    private async getProducts(): Promise<void> {
-      let pagination = await this.shopService
-         .getProducts(this.selectedBrandId, this.selectedTypeId, this.selectedSort)
-         .toPromise();
+      let pagination = await this.shopService.getProducts(this.shopParams).toPromise();
       this.products = pagination.data;
    }
 
@@ -50,17 +47,17 @@ export class ShopComponent implements OnInit {
    }
 
    async onBrandSelected(id: number): Promise<void> {
-      this.selectedBrandId = id;
+      this.shopParams.brandId = id;
       await this.getProducts();
    }
 
    async onTypeSelected(id: number): Promise<void> {
-      this.selectedTypeId = id;
+      this.shopParams.typeId = id;
       await this.getProducts();
    }
 
    async onSortSelected(sort: string) {
-      this.selectedSort = sort;
+      this.shopParams.sort = sort;
       await this.getProducts();
    }
-}
+  }
