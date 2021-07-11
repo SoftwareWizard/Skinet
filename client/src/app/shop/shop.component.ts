@@ -1,10 +1,9 @@
 import { ShopParams } from '../shared/models/shopParams';
 import { IProductBrand } from '../shared/models/product-brand';
 import { ShopService } from './shop.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IProduct } from '../shared/models/product';
 import { IProductType } from '../shared/models/product-type';
-import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
    selector: 'app-shop',
@@ -12,6 +11,9 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
    styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
+   @ViewChild('search', { static: true }) searchElement: ElementRef<HTMLInputElement> =
+      {} as ElementRef<HTMLInputElement>;
+
    public products: IProduct[] = [];
    public types: IProductType[] = [];
    public brands: IProductBrand[] = [];
@@ -51,11 +53,13 @@ export class ShopComponent implements OnInit {
 
    async onBrandSelected(id: number): Promise<void> {
       this.shopParams.brandId = id;
+      this.shopParams.pageNumber = 1;
       await this.getProducts();
    }
 
    async onTypeSelected(id: number): Promise<void> {
       this.shopParams.typeId = id;
+      this.shopParams.pageNumber = 1;
       await this.getProducts();
    }
 
@@ -65,7 +69,20 @@ export class ShopComponent implements OnInit {
    }
 
    async onPageChanged(pageNumber: number) {
-     this.shopParams.pageNumber = pageNumber;
-     await this.getProducts();
+      if (this.shopParams.pageNumber !== pageNumber) {
+         this.shopParams.pageNumber = pageNumber;
+         await this.getProducts();
+      }
    }
-  }
+
+   async onSearch() {
+      this.shopParams.search = this.searchElement.nativeElement.value;
+      await this.getProducts();
+   }
+
+   async onReset() {
+      this.shopParams = new ShopParams();
+      await this.getProducts();
+      this.searchElement.nativeElement.value = '';
+   }
+}

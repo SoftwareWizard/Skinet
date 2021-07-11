@@ -42,10 +42,17 @@
                [pageSize]="shopParams.pageSize"
                [pageNumber]="shopParams.pageNumber"
             ></app-paging-header>
+
             <div class="form-inline mt-2">
-               <input type="text" class="form-control input-search mr-2" placeholder="Search" />
-               <div class="btn btn-outline-primary mr-2">Search</div>
-               <div class="btn btn-outline-success">Reset</div>
+               <input
+                  (keyup.enter)="onSearch()"
+                  type="text"
+                  class="form-control input-search mr-2"
+                  #search
+                  placeholder="Search"
+               />
+               <div class="btn btn-outline-primary mr-2" (click)="onSearch()">Search</div>
+               <div class="btn btn-outline-success" (click)="onReset()">Reset</div>
             </div>
          </div>
 
