@@ -13,17 +13,35 @@
       fixed-top
    "
 >
-   <img src="/assets/images/logo.png" style="max-height: 70px" alt="logo" />
+   <img src="/assets/images/logo.png" style="max-height: 70px" alt="logo" class="logo" routerLink="/" />
    <nav class="my-2 my-md-0 mr-md-3 text-upper">
-      <a class="p-2 text-dark" href="#">Home</a>
-      <a class="p-2 text-dark" href="#">Shop</a>
-      <a class="p-2 text-dark" href="#">Contact</a>
+      <a
+         class="p-2 text-dark"
+         routerLink="/"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         >Home</a
+      >
+      <a
+         class="p-2 text-dark"
+         routerLink="/shop"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         >Shop</a
+      >
+      <a
+         class="p-2 text-dark"
+         routerLink="/contact"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         >Contact</a
+      >
    </nav>
    <div class="d-flex align-items-center">
-     <a href="#" class="position-relative">
-       <i class="fa fa-shopping-cart fa-2x mr-5 text-dark"></i>
-       <div class="cart-no">5</div>
-     </a>
+      <a href="#" class="position-relative">
+         <i class="fa fa-shopping-cart fa-2x mr-5 text-dark"></i>
+         <div class="cart-no">5</div>
+      </a>
       <a class="btn btn-outline-primary mr-2" href="#">Sign up</a>
       <a class="btn btn-outline-primary mr-3" href="#">Sign out</a>
    </div>
