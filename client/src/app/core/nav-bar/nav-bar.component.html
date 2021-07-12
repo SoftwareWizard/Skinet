@@ -13,7 +13,13 @@
       fixed-top
    "
 >
-   <img src="/assets/images/logo.png" style="max-height: 70px" alt="logo" class="logo" routerLink="/" />
+   <img
+      src="/assets/images/logo.png"
+      style="max-height: 70px"
+      alt="logo"
+      class="logo"
+      routerLink="/"
+   />
    <nav class="my-2 my-md-0 mr-md-3 text-upper">
       <a
          class="p-2 text-dark"
@@ -35,6 +41,13 @@
          routerLinkActive="active"
          [routerLinkActiveOptions]="{ exact: true }"
          >Contact</a
+      >
+      <a
+         class="p-2 text-dark"
+         routerLink="/test-error"
+         routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         >Errors</a
       >
    </nav>
    <div class="d-flex align-items-center">
