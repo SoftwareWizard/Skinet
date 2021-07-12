@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProductBrand } from '../shared/models/product-brand';
 import { IProductType } from '../shared/models/product-type';
+import { IProduct } from '../shared/models/product';
 
 @Injectable({
    providedIn: 'root',
@@ -34,6 +35,10 @@ export class ShopService {
       params = params.append('pageSize', shopParams.pageSize);
 
       return this.http.get<IPagination>(`${this.baseUrl}/products`, { params });
+   }
+
+   public getProduct(id: number): Observable<IProduct> {
+      return this.http.get<IProduct>(`${this.baseUrl}/products/${id}`);
    }
 
    public getTypes(): Observable<IProductType[]> {

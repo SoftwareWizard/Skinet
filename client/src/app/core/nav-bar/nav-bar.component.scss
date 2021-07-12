@@ -26,4 +26,8 @@ a {
   &:hover {
     border-color: blue;
   }
+
+  &:focus {
+    outline: none;
+  }
 }
