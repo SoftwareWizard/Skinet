@@ -8,13 +8,21 @@ import { ServerErrorComponent } from './server-error/server-error.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SectionHeaderComponent } from './section-header/section-header.component';
+import { BreadcrumbModule } from 'xng-breadcrumb';
 
 @NgModule({
-   declarations: [NavBarComponent, TestErrorComponent, NotFoundComponent, ServerErrorComponent, SectionHeaderComponent],
+   declarations: [
+      NavBarComponent,
+      TestErrorComponent,
+      NotFoundComponent,
+      ServerErrorComponent,
+      SectionHeaderComponent,
+   ],
    imports: [
       CommonModule,
       RouterModule,
       BrowserAnimationsModule,
+      BreadcrumbModule,
       ToastrModule.forRoot({
          positionClass: 'toast-bottom-right',
          preventDuplicates: true,
