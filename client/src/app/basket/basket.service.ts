@@ -11,40 +11,57 @@ import { IProduct } from '../shared/models/product';
 })
 export class BasketService {
    baseUrl = environment.apiUrl;
-   private basketSource = new BehaviorSubject<IBasket>(null as any);
+   private basketSource = new BehaviorSubject<IBasket>(null!);
+
    public basket$ = this.basketSource.asObservable();
 
    constructor(private http: HttpClient) {}
 
-   public getBasket(id: string) {
-      return this.http.get<IBasket>(`${this.baseUrl}/basket/${id}`).pipe(
-         map((basket: IBasket) => {
-            this.basketSource.next(basket);
-         })
-      );
+   public async getBasket(id: string): Promise<IBasket> {
+      return await this.http
+         .get<IBasket>(`${this.baseUrl}/basket/${id}`)
+         .pipe(
+            map(item => {
+               this.basketSource.next(item);
+               return item;
+            })
+         )
+         .toPromise();
    }
 
-   public setBasket(basket: IBasket) {
-      return this.http.post<IBasket>(`${this.baseUrl}/basket`, basket).pipe(
-         map((basket: IBasket) => {
-            this.basketSource.next(basket);
-         })
-      );
+   public async setBasket(basket: IBasket): Promise<IBasket> {
+      return await this.http
+         .post<IBasket>(`${this.baseUrl}/basket`, basket)
+         .pipe(
+            map(item => {
+               this.basketSource.next(item);
+               return item;
+            })
+         )
+         .toPromise();
    }
 
-   public deleteBasket(id: string): Observable<boolean> {
-      return this.http.delete<boolean>(`${this.baseUrl}/basket/${id}`);
+   public async deleteBasket(id: string): Promise<boolean> {
+      return await this.http
+         .delete<boolean>(`${this.baseUrl}/basket/${id}`)
+         .pipe(
+            map(item => {
+               this.basketSource.next(null as any);
+               return item;
+            })
+         )
+         .toPromise();
    }
 
-   public getCurrentBasketValue() {
-      return this.basketSource.value;
-   }
-
-   public addItemToBasket(item: IProduct, quantity = 1) {
+   public async addItemToBasket(item: IProduct, quantity = 1): Promise<void> {
       const itemToAdd: IBasketItem = this.mapProductItemToBasketItem(item, quantity);
-      const basket = this.getCurrentBasketValue() ?? this.createBasekt();
+      const basket = this.getCurrentBasketValue() ?? this.createBasket();
       basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
-      this.setBasket(basket);
+      await this.setBasket(basket);
+   }
+
+   private getCurrentBasketValue() {
+      return this.basketSource.value;
    }
 
    private addOrUpdateItem(
@@ -65,7 +82,7 @@ export class BasketService {
       return items;
    }
 
-   private createBasekt(): IBasket {
+   private createBasket(): IBasket {
       const basket = new Basket();
       localStorage.setItem('basket_id', basket.id);
       return basket;
