@@ -5,16 +5,6 @@ import { Component, OnInit } from '@angular/core';
    templateUrl: './app.component.html',
    styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
    title = 'Skinet';
-
-   constructor(private basketService: BasketService) {}
-
-   async ngOnInit(): Promise<void> {
-      const basketId = localStorage.getItem('basket_id');
-
-      if (basketId) {
-         await this.basketService.getBasket(basketId);
-      }
-   }
 }

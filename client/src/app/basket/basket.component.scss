@@ -4,7 +4,16 @@ img {
 
 .symbol {
   font-size: 2em;
+  cursor: pointer;
 }
 .trash-symbol {
   font-size: 2em;
+}
+
+tbody td {
+  padding: 0;
+}
+
+tbody th {
+  padding: 0;
 }

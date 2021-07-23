@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Basket, IBasket, IBasketItem } from '../shared/models/basket';
+import { BehaviorSubject } from 'rxjs';
+import { Basket, IBasket, IBasketItem, IBasketTotal } from '../shared/models/basket';
 import { map } from 'rxjs/operators';
 import { IProduct } from '../shared/models/product';
 
@@ -12,8 +12,10 @@ import { IProduct } from '../shared/models/product';
 export class BasketService {
    baseUrl = environment.apiUrl;
    private basketSource = new BehaviorSubject<IBasket>(null!);
+   private basketTotalSource = new BehaviorSubject<IBasketTotal>(null!);
 
    public basket$ = this.basketSource.asObservable();
+   public basketTotal$ = this.basketTotalSource.asObservable();
 
    constructor(private http: HttpClient) {}
 
@@ -23,34 +25,69 @@ export class BasketService {
          .pipe(
             map(item => {
                this.basketSource.next(item);
+               this.calculateTotal();
                return item;
             })
          )
          .toPromise();
    }
 
-   public async setBasket(basket: IBasket): Promise<IBasket> {
+   private async setBasket(basket: IBasket): Promise<IBasket> {
       return await this.http
          .post<IBasket>(`${this.baseUrl}/basket`, basket)
          .pipe(
             map(item => {
                this.basketSource.next(item);
+               this.calculateTotal();
                return item;
             })
          )
          .toPromise();
    }
 
-   public async deleteBasket(id: string): Promise<boolean> {
+   private async deleteBasket(id: string): Promise<boolean> {
       return await this.http
          .delete<boolean>(`${this.baseUrl}/basket/${id}`)
          .pipe(
             map(item => {
                this.basketSource.next(null as any);
+               this.calculateTotal();
                return item;
             })
          )
          .toPromise();
+   }
+
+   public async incrementItemQuantity(item: IBasketItem) {
+      const basket = this.getCurrentBasketValue();
+      const foundIndex = basket.items.findIndex(x => x.id === item.id);
+      basket.items[foundIndex].quantity++;
+      await this.setBasket(basket);
+   }
+
+   public async decrementItemQuantity(item: IBasketItem) {
+      const basket = this.getCurrentBasketValue();
+      const foundIndex = basket.items.findIndex(x => x.id === item.id);
+      basket.items[foundIndex].quantity--;
+
+      if (basket.items[foundIndex].quantity === 0) {
+         basket.items.splice(foundIndex, 1);
+      }
+
+      await this.setBasket(basket);
+   }
+
+   public async removeItem(item: IBasketItem) {
+      const basket = this.getCurrentBasketValue();
+      const foundIndex = basket.items.findIndex(x => x.id === item.id);
+      basket.items.splice(foundIndex, 1);
+      await this.setBasket(basket);
+   }
+
+   public async clearBasket() {
+      const basket = this.getCurrentBasketValue();
+      localStorage.removeItem('basket_id');
+      await this.deleteBasket(basket.id);
    }
 
    public async addItemToBasket(item: IProduct, quantity = 1): Promise<void> {
@@ -80,6 +117,17 @@ export class BasketService {
       }
 
       return items;
+   }
+
+   private calculateTotal() {
+      const basket = this.getCurrentBasketValue();
+
+      if (basket) {
+         const shipping = 0;
+         const subtotal = basket.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+         const total = subtotal + shipping;
+         this.basketTotalSource.next({ shipping, subtotal, total });
+      }
    }
 
    private createBasket(): IBasket {

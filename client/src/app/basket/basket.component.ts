@@ -1,7 +1,7 @@
-import { IBasket } from './../shared/models/basket';
-import { IProduct } from './../shared/models/product';
+import { Observable } from 'rxjs';
+import { IBasket, IBasketItem } from './../shared/models/basket';
 import { BasketService } from './basket.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
    selector: 'app-basket',
@@ -10,14 +10,27 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class BasketComponent implements OnInit {
    public basket: IBasket = {} as IBasket;
+   public basket$ = new Observable<IBasket>();
 
    constructor(private basketService: BasketService) {}
 
    async ngOnInit(): Promise<void> {
-      const basketId = localStorage.getItem('basket_id');
+      this.basket$ = this.basketService.basket$;
+   }
 
-      if (basketId) {
-         this.basket = await this.basketService.getBasket(basketId!);
-      }
+   public async incrementQuantity(item: IBasketItem) {
+      await this.basketService.incrementItemQuantity(item);
+   }
+
+   public async decrementQuantity(item: IBasketItem) {
+      await this.basketService.decrementItemQuantity(item);
+   }
+
+   public async removeItem(item: IBasketItem) {
+      await this.basketService.removeItem(item);
+   }
+
+   public async clearBasket() {
+      await this.basketService.clearBasket();
    }
 }
