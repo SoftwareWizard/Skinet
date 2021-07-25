@@ -1,10 +1,12 @@
 using API.Extensions;
 using API.Helpers;
 using API.Middleware;
+using Core.Entities.Identity;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +33,7 @@ namespace API
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => x.UseSqlite(defaultConnectionString));
-            services.AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(defaultConnectionString));
+            services.AddDbContext<AppIdentityDbContext>(x => x.UseSqlite(identityConnectionString));
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -40,6 +42,8 @@ namespace API
             });
 
             services.AddApplicationServices();
+            services.AddIdentityServices();
+            services.AddAuthentication();
             services.AddSwaggerDocumentation();
             services.AddCors(opt =>
             {
@@ -53,7 +57,6 @@ namespace API
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ExceptionMiddleware>();
