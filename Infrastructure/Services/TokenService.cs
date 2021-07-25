@@ -34,7 +34,7 @@ namespace Infrastructure.Services
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature);
 
-            var tokenDescriptior = new SecurityTokenDescriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
@@ -43,14 +43,9 @@ namespace Infrastructure.Services
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptior);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
-        }
-
-        public string VerifyToken(string token, AppUser user)
-        {
-            throw new NotImplementedException();
         }
     }
 }
