@@ -42,8 +42,7 @@ namespace API
             });
 
             services.AddApplicationServices();
-            services.AddIdentityServices();
-            services.AddAuthentication();
+            services.AddIdentityServices(_configuration);
             services.AddSwaggerDocumentation();
             services.AddCors(opt =>
             {
