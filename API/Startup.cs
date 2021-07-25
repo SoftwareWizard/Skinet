@@ -58,7 +58,7 @@ namespace API
         {
             app.UseMiddleware<ExceptionMiddleware>();
 
-            app.UseSwaggerDocumenation();
+            app.UseSwaggerDocumentation();
 
             app.UseStatusCodePagesWithRedirects("/errors/{0}");
 
