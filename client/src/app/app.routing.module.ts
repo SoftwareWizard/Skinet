@@ -2,7 +2,7 @@ import { NotFoundComponent } from './core/not-found/not-found.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
 import { HomeComponent } from './home/home.component';
 import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { TestErrorComponent } from './core/test-error/test-error.component';
 
 const routes: Routes = [
@@ -24,6 +24,11 @@ const routes: Routes = [
       path: 'checkout',
       loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule),
       data: { breadcrumb: 'Checkout' },
+   },
+   {
+      path: 'account',
+      loadChildren: () => import('./account/account.module').then(m => m.AccountModuleModule),
+      data: { breadcrumb: 'Account' },
    },
    { path: '**', redirectTo: 'not-found', pathMatch: 'full' },
 ];
