@@ -50,7 +50,7 @@
       >Errors</a
     >
   </nav>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center login-area">
     <a routerLink="/basket" class="position-relative">
       <i class="fa fa-shopping-cart fa-2x mr-5 text-dark"></i>
       <div *ngIf="basket$ | async as basket" class="cart-no">
@@ -59,7 +59,7 @@
     </a>
 
     <ng-container *ngIf="!(currentUser$ | async) as user">
-      <a class="btn btn-outline-primary mr-2">Login</a>
+      <a class="btn btn-outline-primary mr-2" routerLink="/account/login">Login</a>
       <a class="btn btn-outline-primary mr-3">Register</a>
     </ng-container>
 
@@ -76,7 +76,7 @@
               <i class="fa fa-list-alt mr-3"></i>View Orders
             </a>
             <div class="dropdown-divder"></div>
-            <a class="dropdown-item d-flex align-items-center py-2">
+            <a class="dropdown-item d-flex align-items-center py-2" (click)="logout()">
               <i class="fa fa-sign-out mr-3"></i>Logout
             </a>
         </div>

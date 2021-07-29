@@ -11,7 +11,7 @@
   right: 32px;
 }
 
-a {
+nav a {
   text-decoration: none;
   color: #343a40 !important;
 
@@ -32,11 +32,25 @@ a {
   }
 }
 
-.user-dropdown {
-  cursor: pointer;
-}
+.login-area {
+  a {
+    color: black;
+  }
 
-.dropdown-item {
-  color: white !important;
-  cursor: pointer;
+  .user-dropdown {
+    cursor: pointer;
+  }
+
+  .dropdown-item {
+    color: white !important;
+    cursor: pointer;
+  }
+
+  .btn {
+    color: black;
+  }
+
+  .btn:hover {
+    color: white;
+  }
 }
