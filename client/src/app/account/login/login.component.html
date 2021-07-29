@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-center">
   <div class="col-3">
-    <form class="form-signin">
+    <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="text-center mb-4">
         <i class="fa fa-sign-in fa-4x login-symbol"></i>
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
