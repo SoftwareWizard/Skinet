@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -12,24 +13,25 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
-   declarations: [
-      NavBarComponent,
-      TestErrorComponent,
-      NotFoundComponent,
-      ServerErrorComponent,
-      SectionHeaderComponent,
-   ],
-   imports: [
-      CommonModule,
-      RouterModule,
-      BrowserAnimationsModule,
-      BreadcrumbModule,
-      NgxSpinnerModule,
-      ToastrModule.forRoot({
-         positionClass: 'toast-bottom-right',
-         preventDuplicates: true,
-      }),
-   ],
-   exports: [NavBarComponent, SectionHeaderComponent],
+  declarations: [
+    NavBarComponent,
+    TestErrorComponent,
+    NotFoundComponent,
+    ServerErrorComponent,
+    SectionHeaderComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule,
+    BrowserAnimationsModule,
+    BreadcrumbModule,
+    NgxSpinnerModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
+    SharedModule,
+  ],
+  exports: [NavBarComponent, SectionHeaderComponent],
 })
 export class CoreModule {}

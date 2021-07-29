@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { IUser } from '../shared/models/user';
@@ -17,15 +17,36 @@ export class AccountService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  public login(values: any) {
-    return this.http.post<IUser>(`${this.baseUrl}/account/login`, values).pipe(
-      map((user: IUser) => {
-        if (user) {
-          localStorage.setItem(TOKEN, user.token);
-          this.currentUserSource.next(user);
-        }
-      })
-    );
+  public async loadCurrentUser(token: string): Promise<IUser> {
+    let headers = new HttpHeaders();
+    headers = headers.set('Authorization', `Bearer ${token}`);
+
+    return await this.http
+      .get<IUser>(`${this.baseUrl}/account`, { headers })
+      .pipe(
+        map((user: IUser) => {
+          if (user) {
+            this.currentUserSource.next(user);
+          }
+
+          return user;
+        })
+      )
+      .toPromise();
+  }
+
+  public async login(values: any): Promise<void> {
+    return await this.http
+      .post<IUser>(`${this.baseUrl}/account/login`, values)
+      .pipe(
+        map((user: IUser) => {
+          if (user) {
+            localStorage.setItem(TOKEN, user.token);
+            this.currentUserSource.next(user);
+          }
+        })
+      )
+      .toPromise();
   }
 
   public register(values: any) {

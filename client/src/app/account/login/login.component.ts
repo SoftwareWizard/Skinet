@@ -1,3 +1,5 @@
+import { IUser } from './../../shared/models/user';
+import { AccountService } from './../account.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -9,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = null!;
 
-  constructor() {}
+  constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.createLoginForm();
@@ -22,7 +24,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  public onSubmit() {
-    console.log(this.loginForm.value);
+  public async onSubmit(): Promise<void> {
+    await this.accountService.login(this.loginForm.value);
   }
 }
