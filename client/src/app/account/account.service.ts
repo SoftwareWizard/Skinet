@@ -49,7 +49,7 @@ export class AccountService {
       .toPromise();
   }
 
-  public register(values: any) {
+  public async register(values: any): Promise<void> {
     return this.http
       .post<IUser>(`${this.baseUrl}/account/register`, values)
       .pipe(
@@ -58,7 +58,8 @@ export class AccountService {
             localStorage.setItem(TOKEN, user.token);
           }
         })
-      );
+      )
+      .toPromise();
   }
 
   public logout() {

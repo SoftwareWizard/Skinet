@@ -60,7 +60,7 @@
 
     <ng-container *ngIf="!(currentUser$ | async) as user">
       <a class="btn btn-outline-primary mr-2" routerLink="/account/login">Login</a>
-      <a class="btn btn-outline-primary mr-3">Register</a>
+      <a class="btn btn-outline-primary mr-3" routerLink="/account/register">Register</a>
     </ng-container>
 
     <ng-container *ngIf="currentUser$ | async as user">
