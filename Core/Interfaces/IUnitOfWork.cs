@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Core.Entities;
 
 namespace Core.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        object Repository<T>(object deliveryMethodId);
+        IGenericRepository<TEntity> Repository<TEntity>() where TEntity : EntityBase;
+        Task<int> Complete();
     }
 }
