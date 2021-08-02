@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data
@@ -17,28 +18,29 @@ namespace Infrastructure.Data
             {
                 if (!context.ProductBrands.Any())
                 {
-                    var data = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/brands.json");
-                    var items = JsonSerializer.Deserialize<List<ProductBrand>>(data);
-
-                    await context.ProductBrands.AddRangeAsync(items);
+                    var items = await LoadItems<ProductBrand>("brands.json");
+                    await context.ProductBrands.AddRangeAsync(items!);
                     await context.SaveChangesAsync();
                 }
 
                 if (!context.ProductTypes.Any())
                 {
-                    var data = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/types.json");
-                    var items = JsonSerializer.Deserialize<List<ProductType>>(data);
-
-                    await context.ProductTypes.AddRangeAsync(items);
+                    var items = await LoadItems<ProductType>("types.json");
+                    await context.ProductTypes.AddRangeAsync(items!);
                     await context.SaveChangesAsync();
                 }
 
                 if (!context.Products.Any())
                 {
-                    var data = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/products.json");
-                    var items = JsonSerializer.Deserialize<List<Product>>(data);
+                    var items = await LoadItems<Product>("products.json");
+                    await context.Products.AddRangeAsync(items!);
+                    await context.SaveChangesAsync();
+                }
 
-                    await context.Products.AddRangeAsync(items);
+                if (!context.DeliveryMethods.Any())
+                {
+                    var items = await LoadItems<DeliveryMethod>("delivery.json");
+                    await context.DeliveryMethods.AddRangeAsync(items!);
                     await context.SaveChangesAsync();
                 }
             }
@@ -47,6 +49,13 @@ namespace Infrastructure.Data
                 var logger = loggerFactory.CreateLogger<StoreContextSeed>();
                 logger.LogError(exception, "Error while seeding");
             }
+        }
+
+        private static async Task<List<TEntity>> LoadItems<TEntity>(string filename)
+        {
+            var filepath = $"../Infrastructure/Data/SeedData/{filename}";
+            var data = await File.ReadAllTextAsync(filepath);
+            return JsonSerializer.Deserialize<List<TEntity>>(data);
         }
     }
 }
