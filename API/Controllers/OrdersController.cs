@@ -13,12 +13,12 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrderController : ApiControllerBase
+    public class OrdersController : ApiControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService, IMapper mapper)
+        public OrdersController(IOrderService orderService, IMapper mapper)
         {
             _orderService = orderService;
             _mapper = mapper;
@@ -30,10 +30,9 @@ namespace API.Controllers
             var email = HttpContext.User.RetrieveEmailFromPrincipal();
             var address = _mapper.Map<AddressDto, Address>(orderDto.ShipToAddress);
             var order = await _orderService.CreateOrder(email, orderDto.DeliveryMethodId, orderDto.BasketId, address);
-            var resultOrderDto = _mapper.Map<Order, OrderDto>(order);
 
-            return resultOrderDto != null
-                ? Ok(resultOrderDto)
+            return order != null
+                ? Ok(order)
                 : BadRequest(new ApiResponse(400, "Problem creating order"));
         }
     }

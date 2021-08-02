@@ -42,6 +42,7 @@ namespace Infrastructure.Services
             var deliveryMethod = await _deliveryMethodRepository.GetById(deliveryMethodId);
             var subTotal = items.Sum(item => item.Price * item.Quantity);
             var order = new Order(items, buyerEmail, shippingAddress, deliveryMethod, subTotal);
+            return order;
 
         }
 
