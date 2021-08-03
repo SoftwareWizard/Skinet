@@ -1,0 +1,8 @@
+button.nav-link {
+  border-radius: 0;
+  border: none;
+
+  &.active {
+    background: blue;
+  }
+}

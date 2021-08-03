@@ -12,12 +12,25 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { OrderTotalComponent } from './components/order-total/order-total.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextInputComponent } from './components/text-input/text-input.component';
+import { CdkStepperModule } from '@angular/cdk/stepper';
+import { StepperComponent } from './components/stepper/stepper.component';
+import { CheckoutAddressComponent } from './components/checkout-address/checkout-address.component';
+import { CheckoutDeliveryMethodComponent } from './components/checkout-delivery-method/checkout-delivery-method.component';
+import { CheckoutReviewComponent } from './components/checkout-review/checkout-review.component';
+import { CheckoutPaymentComponent } from './components/checkout-payment/checkout-payment.component';
+import { CheckoutSuccessComponent } from './components/checkout-success/checkout-success.component';
 @NgModule({
   declarations: [
     PagingHeaderComponent,
     PagerComponent,
     OrderTotalComponent,
     TextInputComponent,
+    StepperComponent,
+    CheckoutAddressComponent,
+    CheckoutDeliveryMethodComponent,
+    CheckoutReviewComponent,
+    CheckoutPaymentComponent,
+    CheckoutSuccessComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +38,7 @@ import { TextInputComponent } from './components/text-input/text-input.component
     CarouselModule.forRoot(),
     ReactiveFormsModule,
     BsDropdownModule.forRoot(),
+    CdkStepperModule
   ],
   exports: [
     PaginationModule,
@@ -36,6 +50,13 @@ import { TextInputComponent } from './components/text-input/text-input.component
     ReactiveFormsModule,
     BsDropdownModule,
     TextInputComponent,
+    CdkStepperModule,
+    StepperComponent,
+    CheckoutAddressComponent,
+    CheckoutDeliveryMethodComponent,
+    CheckoutReviewComponent,
+    CheckoutPaymentComponent,
+    CheckoutSuccessComponent
   ],
 })
 export class SharedModule {}
