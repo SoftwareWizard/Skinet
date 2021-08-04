@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit {
-  checkoutForm: FormGroup = null!;
+  public checkoutForm: FormGroup = null!;
 
   constructor(private fb: FormBuilder) {}
 
@@ -32,5 +32,10 @@ export class CheckoutComponent implements OnInit {
         nameOnCard: [null, Validators.required],
       }),
     });
+  }
+
+  public isComplete(formName: string): boolean {
+    let value = (this.checkoutForm.get(formName))?.valid ?? false;
+    return value;
   }
 }

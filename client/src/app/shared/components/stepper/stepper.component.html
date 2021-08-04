@@ -6,7 +6,7 @@
         [class.active]="selectedIndex === i"
         class="nav-link py-3 text-uppercase font-weight-bold btn-block"
       >
-        {{ step.label }}
+        {{ step.label }}<i class="fa fa-check ml-2 check" *ngIf="step.completed"></i>
       </button>
     </li>
   </ul>

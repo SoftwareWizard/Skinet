@@ -9,10 +9,20 @@
         class="custom-control-input"
       />
       <label for="{{ method.id }}" class="custom-control-label ml-4">
-        <strong>{{ method.shortName }} - {{ method.price }}</strong>
+        <strong>{{ method.shortName }} - {{ method.price | currency}}</strong>
         <br />
         <span class="label-description">{{ method.description }}</span>
       </label>
     </div>
   </div>
 </div>
+<div
+  class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5"
+>
+  <button class="btn btn-outline-primary" cdkStepperPrevious>
+    <i class="fa fa-angle-left mr-2"></i>Back to Address
+  </button>
+  <button class="btn btn-primary" cdkStepperNext>
+    Go to Review
+    <i class="fa fa-angle-right ml-2"></i>
+  </button>
