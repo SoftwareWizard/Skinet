@@ -1,5 +1,6 @@
 using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -45,6 +46,13 @@ namespace API.Controllers
         public ActionResult GetNotFoundRequest(int id)
         {
             return NotFound(id);
+        }
+
+        [HttpGet("unauthorized")]
+        [Authorize]
+        public ActionResult Unauthorized()
+        {
+            return Unauthorized(new ApiResponse(401));
         }
     }
 }
