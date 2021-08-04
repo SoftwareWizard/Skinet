@@ -1,3 +1,4 @@
+import { IAddress } from './../shared/models/address';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -71,6 +72,18 @@ export class AccountService {
   public async checkEmailExists(email: string): Promise<boolean> {
     return await this.http
       .get<boolean>(`${this.baseUrl}/account/emailexists?email=${email}`)
+      .toPromise();
+  }
+
+  public async getUserAddress() {
+    return await this.http
+      .get<IAddress>(`${this.baseUrl}/account/address`)
+      .toPromise();
+  }
+
+  public async updateUserAddress(address: IAddress) {
+    return await this.http
+      .post<IAddress>(`${this.baseUrl}/account/address`, address)
       .toPromise();
   }
 }

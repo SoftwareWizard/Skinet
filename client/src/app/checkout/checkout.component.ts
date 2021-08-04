@@ -1,3 +1,4 @@
+import { AccountService } from './../account/account.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,10 +10,14 @@ import { Component, OnInit } from '@angular/core';
 export class CheckoutComponent implements OnInit {
   public checkoutForm: FormGroup = null!;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.createCheckoutFrom();
+    await this.getAddressFormValues();
   }
 
   createCheckoutFrom() {
@@ -35,7 +40,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   public isComplete(formName: string): boolean {
-    let value = (this.checkoutForm.get(formName))?.valid ?? false;
+    let value = this.checkoutForm.get(formName)?.valid ?? false;
     return value;
+  }
+
+  async getAddressFormValues() {
+    let address = await this.accountService.getUserAddress();
+
+    if (address) {
+      this.checkoutForm.get('addressForm')?.patchValue(address);
+    }
   }
 }
