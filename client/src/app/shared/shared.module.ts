@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -19,6 +20,7 @@ import { CheckoutDeliveryMethodComponent } from './components/checkout-delivery-
 import { CheckoutReviewComponent } from './components/checkout-review/checkout-review.component';
 import { CheckoutPaymentComponent } from './components/checkout-payment/checkout-payment.component';
 import { CheckoutSuccessComponent } from './components/checkout-success/checkout-success.component';
+import { BasketSummaryComponent } from './components/basket-summary/basket-summary.component';
 @NgModule({
   declarations: [
     PagingHeaderComponent,
@@ -31,6 +33,7 @@ import { CheckoutSuccessComponent } from './components/checkout-success/checkout
     CheckoutReviewComponent,
     CheckoutPaymentComponent,
     CheckoutSuccessComponent,
+    BasketSummaryComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ import { CheckoutSuccessComponent } from './components/checkout-success/checkout
     CarouselModule.forRoot(),
     ReactiveFormsModule,
     BsDropdownModule.forRoot(),
-    CdkStepperModule
+    CdkStepperModule,
+    RouterModule
   ],
   exports: [
     PaginationModule,
@@ -56,7 +60,8 @@ import { CheckoutSuccessComponent } from './components/checkout-success/checkout
     CheckoutDeliveryMethodComponent,
     CheckoutReviewComponent,
     CheckoutPaymentComponent,
-    CheckoutSuccessComponent
+    CheckoutSuccessComponent,
+    BasketSummaryComponent
   ],
 })
 export class SharedModule {}

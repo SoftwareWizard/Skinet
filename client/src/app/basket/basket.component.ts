@@ -9,7 +9,6 @@ import { Component, OnInit } from '@angular/core';
    styleUrls: ['./basket.component.scss'],
 })
 export class BasketComponent implements OnInit {
-   public basket: IBasket = {} as IBasket;
    public basket$ = new Observable<IBasket>();
 
    constructor(private basketService: BasketService) {}
@@ -18,19 +17,19 @@ export class BasketComponent implements OnInit {
       this.basket$ = this.basketService.basket$;
    }
 
-   public async incrementQuantity(item: IBasketItem) {
+   public async onIncrementQuantity(item: IBasketItem) {
       await this.basketService.incrementItemQuantity(item);
    }
 
-   public async decrementQuantity(item: IBasketItem) {
+   public async onDecrementQuantity(item: IBasketItem) {
       await this.basketService.decrementItemQuantity(item);
    }
 
-   public async removeItem(item: IBasketItem) {
+   public async onRemoveItem(item: IBasketItem) {
       await this.basketService.removeItem(item);
    }
 
-   public async clearBasket() {
+   public async onClearBasket() {
       await this.basketService.clearBasket();
    }
 }

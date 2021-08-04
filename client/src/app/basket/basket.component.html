@@ -1,85 +1,29 @@
 <div class="container mt-2">
-   <div class="pb-5">
-      <div class="container" *ngIf="(basket$ | async) as basket; else noItems">
-         <div class="row">
-            <div class="col py-5 mb-1">
-               <table class="table table-striped">
-                  <thead class="thead-light">
-                     <tr>
-                        <th scope="col" class="border-0 bg-light">
-                           <div class="py-2 text-uppercase">Product</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-light">
-                           <div class="py-2 text-uppercase text-center">Price</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-light">
-                           <div class="py-2 text-uppercase text-center">Quantity</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-light">
-                           <div class="py-2 text-uppercase text-center">Total</div>
-                        </th>
-                        <th scope="col" class="border-0 bg-light">
-                           <div class="py-2 text-uppercase text-center">Remove</div>
-                        </th>
-                     </tr>
-                  </thead>
-
-                  <tbody>
-                     <tr *ngFor="let item of basket.items">
-                        <th scope="row">
-                           <div class="p-2">
-                              <img src="{{ item.pictureUrl }}" alt="" class="img-fluid" />
-                              <div class="ml-3 d-inline-block align-middle">
-                                 <h5 class="mb-0">
-                                    <a routerLink="/shop/{{ item.id }}" class="text-light">{{
-                                       item.productName
-                                    }}</a>
-                                 </h5>
-                                 <span class="text-muted font-weight-normal font-italic d-block"
-                                    >Type: {{ item.type }}</span
-                                 >
-                              </div>
-                           </div>
-                        </th>
-                        <td class="align-middle text-center">{{ item.price | currency }}</td>
-                        <td class="align-middle">
-                           <div class="d-flex justify-content-center align-items-center">
-                              <i
-                                 (click)="decrementQuantity(item)"
-                                 class="fa fa-minus-circle text-warning symbol mr-2"
-                              ></i>
-                              <span class="font-weight-bold mr-2">{{ item.quantity }}</span>
-                              <i
-                                 (click)="incrementQuantity(item)"
-                                 class="fa fa-plus-circle text-success symbol"
-                              ></i>
-                           </div>
-                        </td>
-                        <td class="align-middle text-center">
-                           {{ item.price * item.quantity | currency }}
-                        </td>
-                        <td class="align-middle text-center">
-                           <a class="text-danger" (click)="removeItem(item)">
-                              <i class="fa fa-trash text-warning trash-symbol symbol"></i>
-                           </a>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
-         <div class="row">
-            <div class="col-6 offset-6">
-               <app-order-total></app-order-total>
-               <a routerLink="/checkout" class="btn btn-outline-success">Checkout</a>
-               <a routerLink="/shop" class="btn btn-outline-warning ml-2">Continue Shopping</a>
-               <a (click)="clearBasket()" class="btn btn-outline-danger ml-2">Clear Basket</a>
-            </div>
-         </div>
+  <div class="pb-5">
+    <div class="container" *ngIf="basket$ | async as basket; else noItems">
+      <div class="row">
+        <div class="col py-5 mb-1">
+          <app-basket-summary
+            [basket]="basket"
+            (decrement)="onDecrementQuantity($event)"
+            (increment)="onIncrementQuantity($event)"
+            (remove)="onRemoveItem($event)"
+          ></app-basket-summary>
+        </div>
       </div>
-      <ng-template #noItems>
-        There are no Items in your basket.
-      </ng-template>
-
-   </div>
+      <div class="row">
+        <div class="col-6 offset-6">
+          <app-order-total></app-order-total>
+          <a routerLink="/checkout" class="btn btn-outline-success">Checkout</a>
+          <a routerLink="/shop" class="btn btn-outline-warning ml-2"
+            >Continue Shopping</a
+          >
+          <a (click)="onClearBasket()" class="btn btn-outline-danger ml-2"
+            >Clear Basket</a
+          >
+        </div>
+      </div>
+    </div>
+    <ng-template #noItems> There are no Items in your basket. </ng-template>
+  </div>
 </div>
