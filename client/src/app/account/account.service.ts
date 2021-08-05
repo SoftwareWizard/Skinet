@@ -83,7 +83,7 @@ export class AccountService {
 
   public async updateUserAddress(address: IAddress) {
     return await this.http
-      .post<IAddress>(`${this.baseUrl}/account/address`, address)
+      .put<IAddress>(`${this.baseUrl}/account/address`, address)
       .toPromise();
   }
 }
