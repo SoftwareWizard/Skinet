@@ -112,7 +112,13 @@ export class BasketService {
     await this.setBasket(basket);
   }
 
-  private getCurrentBasketValue() {
+  public deleteLocalBasket(basketId: string) {
+    this.basketSource.next(null!);
+    this.basketTotalSource.next(null!);
+    localStorage.removeItem('basket_id');
+  }
+
+  public getCurrentBasketValue() {
     return this.basketSource.value;
   }
 
