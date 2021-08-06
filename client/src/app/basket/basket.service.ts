@@ -26,6 +26,17 @@ export class BasketService {
 
   constructor(private http: HttpClient) {}
 
+  public async createPaymentIntent(): Promise<IBasket> {
+    let basket = this.getCurrentBasketValue();
+    const basketId = basket.id;
+    basket = await this.http
+      .post<IBasket>(`${this.baseUrl}/payments/${basketId}`, {})
+      .toPromise();
+
+    this.basketSource.next(basket);
+    return basket;
+  }
+
   public setShippingPrice(deliveryMethod: IDeliveryMethod) {
     this.shipping = deliveryMethod.price;
     const basket = this.getCurrentBasketValue();
