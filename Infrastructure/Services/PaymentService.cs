@@ -1,10 +1,12 @@
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Product = Core.Entities.Product;
 
 namespace Infrastructure.Services
 {
@@ -23,7 +25,6 @@ namespace Infrastructure.Services
             _basketRepository = basketRepository;
             _unitOfWork = unitOfWork;
             _config = config;
-
         }
 
         public async Task<CustomerBasket> CreateOrUpdatePaymentIntent(string basketId)
@@ -35,13 +36,13 @@ namespace Infrastructure.Services
 
             if (basket.DeliveryMethodId.HasValue)
             {
-                var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>(basekt.DeliveryMethodId).GetByIdAsync();
+                var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetById(basket.DeliveryMethodId.Value);
                 shippingPrice = deliveryMethod.Price;
             }
 
             foreach (var item in basket.Items)
             {
-                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
+                var productItem = await _unitOfWork.Repository<Product>().GetById(item.Id);
 
                 if (item.Price != productItem.Price)
                 {
@@ -76,10 +77,10 @@ namespace Infrastructure.Services
 
                 }
 
-                await _basketRepository.UpdateBasketAsync(basket);
-
-                return basket;
+                await _basketRepository.UpdateBasket(basket);
             }
+
+            return basket;
         }
     }
 }
