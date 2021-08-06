@@ -57,7 +57,7 @@ namespace Infrastructure.Services
                 {
                     var options = new PaymentIntentCreateOptions
                     {
-                        Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long)shippingPrice,
+                        Amount = (long)(basket.Items.Sum(i => i.Quantity * i.Price) + (long)shippingPrice) * 100,
                         Currency = "usd",
                         PaymentMethodTypes = new List<string> { "card" },
                     };
@@ -70,7 +70,7 @@ namespace Infrastructure.Services
                 {
                     var options = new PaymentIntentUpdateOptions
                     {
-                        Amount = (long)basket.Items.Sum(i => i.Quantity * (i.Price * 100)) + (long)shippingPrice,
+                        Amount = (long)(basket.Items.Sum(i => i.Quantity * i.Price) + (long)shippingPrice) * 100,
                     };
 
                     await service.UpdateAsync(basket.PaymentIntentId, options);
