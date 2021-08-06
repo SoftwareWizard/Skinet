@@ -2,7 +2,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CheckoutService } from './../../../checkout/checkout.service';
 import { BasketService } from 'src/app/basket/basket.service';
 import { FormGroup } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { IBasket } from '../../models/basket';
 import { IOrderToCreate } from '../../models/order';
 import { IDeliveryMethod } from '../../models/deliveryMethod';
@@ -13,8 +13,12 @@ import { Router, NavigationExtras } from '@angular/router';
   templateUrl: './checkout-payment.component.html',
   styleUrls: ['./checkout-payment.component.scss'],
 })
-export class CheckoutPaymentComponent implements OnInit {
+export class CheckoutPaymentComponent implements AfterViewInit {
   @Input() checkoutForm: FormGroup = null!;
+  @ViewChild('cardNumber', {static: true}) cardNumberElement: ElementRef = null!;
+  @ViewChild('cardExpiry', {static: true}) cardExpiryElement: ElementRef  = null!;
+  @ViewChild('cardCvc', {static: true}) cardCvcElement: ElementRef  = null!;
+
   constructor(
     private basketService: BasketService,
     private checkoutService: CheckoutService,
@@ -22,7 +26,9 @@ export class CheckoutPaymentComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   async onSubmitOrder() {
     const basket = this.basketService.getCurrentBasketValue();
