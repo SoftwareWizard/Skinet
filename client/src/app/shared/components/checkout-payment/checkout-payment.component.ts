@@ -44,14 +44,14 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.stripe = Stripe(this.stripePublicKey);
     var elements = this.stripe.elements();
 
-    // this.cardNumber = elements.create('card');
-    // this.cardNumber.mount(this.cardNumberElement.nativeElement);
+    this.cardNumber = elements.create('cardNumber');
+    this.cardNumber.mount(this.cardNumberElement.nativeElement);
 
-    // this.cardExpiry = elements.create('cardExpiry');
-    // this.cardExpiry.mount(this.cardExpiryElement.nativeElement);
+    this.cardExpiry = elements.create('cardExpiry');
+    this.cardExpiry.mount(this.cardExpiryElement.nativeElement);
 
-    // this.cardCvc = elements.create('cardCvc');
-    // this.cardCvc.mount(this.cardCvcElement.nativeElement);
+    this.cardCvc = elements.create('cardCvc');
+    this.cardCvc.mount(this.cardCvcElement.nativeElement);
   }
 
   ngOnDestroy(): void {
