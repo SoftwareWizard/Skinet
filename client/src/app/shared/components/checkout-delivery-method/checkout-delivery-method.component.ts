@@ -20,7 +20,6 @@ export class CheckoutDeliveryMethodComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.deliveryMethods = await this.checkoutService.getDeliveryMethods();
-    console.log(this.deliveryMethods);
   }
 
   public setShippingPrice(deliveryMethdod: IDeliveryMethod) {
