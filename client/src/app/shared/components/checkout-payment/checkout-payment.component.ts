@@ -27,11 +27,14 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     null!;
   @ViewChild('cardCvc', { static: true }) cardCvcElement: ElementRef = null!;
 
-  stripePublicKey = environment.stripePublicKey
+  stripePublicKey = environment.stripePublicKey;
   stripe: stripe.Stripe = null!;
   cardNumber: stripe.elements.Element = null!;
   cardExpiry: stripe.elements.Element = null!;
   cardCvc: stripe.elements.Element = null!;
+
+  cardError: string = null!;
+  cardHandler: stripe.elements.handler = this.onChange.bind(this);
 
   constructor(
     private basketService: BasketService,
@@ -44,8 +47,19 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.stripe = Stripe(this.stripePublicKey);
     var elements = this.stripe.elements();
 
-    this.cardNumber = elements.create('cardNumber');
+    let classes = {
+      base: 'stripe-element',
+      invalid: 'invalid',
+      focus: 'focus',
+      empty: 'empty',
+      complete: 'complete',
+    };
+
+    let options = { classes, showIcon: true };
+
+    this.cardNumber = elements.create('cardNumber', options);
     this.cardNumber.mount(this.cardNumberElement.nativeElement);
+    this.cardNumber.addEventListener('change', this.cardHandler);
 
     this.cardExpiry = elements.create('cardExpiry');
     this.cardExpiry.mount(this.cardExpiryElement.nativeElement);
@@ -58,6 +72,11 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     this.cardNumber.destroy();
     this.cardExpiry.destroy();
     this.cardCvc.destroy();
+  }
+
+  private onChange(response?: stripe.elements.ElementChangeResponse) {
+    let error = response?.error;
+    this.cardError = error?.message ? error.message : null!;
   }
 
   async onSubmitOrder() {
