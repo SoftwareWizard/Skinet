@@ -33,6 +33,6 @@
   </button>
   <button class="btn btn-outline-success" (click)="onSubmitOrder()">
     Submit Order
-    <i class="fa fa-check ml-2"></i>
+    <i *ngIf="isLoading" class="fa fa-spinner fa-spin ml-2"></i>
   </button>
 </div>

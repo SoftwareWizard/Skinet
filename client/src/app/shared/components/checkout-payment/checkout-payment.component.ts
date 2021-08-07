@@ -1,6 +1,3 @@
-import { Observable } from 'rxjs';
-import { IUser } from 'src/app/shared/models/user';
-import { AccountService } from './../../../account/account.service';
 import { environment } from './../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { CheckoutService } from './../../../checkout/checkout.service';
@@ -18,6 +15,13 @@ import { IBasket } from '../../models/basket';
 import { IOrderToCreate } from '../../models/order';
 import { Router, NavigationExtras } from '@angular/router';
 
+const STRIPE_ELEMENT_CLASSES = {
+  base: 'stripe-element',
+  invalid: 'invalid',
+  focus: 'focus',
+  empty: 'empty',
+  complete: 'complete',
+};
 @Component({
   selector: 'app-checkout-payment',
   templateUrl: './checkout-payment.component.html',
@@ -31,48 +35,37 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     null!;
   @ViewChild('cardCvc', { static: true }) cardCvcElement: ElementRef = null!;
 
-  stripePublicKey = environment.stripePublicKey;
-  stripe: stripe.Stripe = null!;
-  cardNumber: stripe.elements.Element = null!;
-  cardExpiry: stripe.elements.Element = null!;
-  cardCvc: stripe.elements.Element = null!;
+  public cardNumber: stripe.elements.Element = null!;
+  public cardExpiry: stripe.elements.Element = null!;
+  public cardCvc: stripe.elements.Element = null!;
 
-  cardNumberError: string = null!;
-  cardExpiryError: string = null!;
-  cardCvcError: string = null!;
+  public cardNumberError: string = null!;
+  public cardExpiryError: string = null!;
+  public cardCvcError: string = null!;
 
-  cardNumberHandler: stripe.elements.handler = this.onChange.bind(this);
-  cardExpiryHandler: stripe.elements.handler = this.onChange.bind(this);
-  cardCvcHandler: stripe.elements.handler = this.onChange.bind(this);
-  private user$: Observable<IUser> = null!;
+  public isLoading = false;
+
+  private cardNumberHandler: stripe.elements.handler = this.onChange.bind(this);
+  private cardExpiryHandler: stripe.elements.handler = this.onChange.bind(this);
+  private cardCvcHandler: stripe.elements.handler = this.onChange.bind(this);
+
+  private stripe: stripe.Stripe = null!;
+  private stripePublicKey = environment.stripePublicKey;
 
   constructor(
     private basketService: BasketService,
     private checkoutService: CheckoutService,
     private toastr: ToastrService,
-    private router: Router,
-    private accountService: AccountService
-  ) {
-    this.user$ = this.accountService.currentUser$;
-  }
+    private router: Router
+  ) {}
 
   ngAfterViewInit(): void {
     this.stripe = Stripe(this.stripePublicKey);
     var elements = this.stripe.elements({ locale: 'en' });
-
-    let classes = {
-      base: 'stripe-element',
-      invalid: 'invalid',
-      focus: 'focus',
-      empty: 'empty',
-      complete: 'complete',
-    };
-
-    let options = { classes };
+    let options = { classes: STRIPE_ELEMENT_CLASSES };
 
     this.cardNumber = elements.create('cardNumber', {
       ...options,
-
       showIcon: true,
     });
 
@@ -114,50 +107,29 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   }
 
   async onSubmitOrder() {
+    this.isLoading = true;
     const basket = this.basketService.getCurrentBasketValue();
     const orderToCreate = this.getOrderToCreate(basket);
-    const nameOnCard = this.checkoutForm
-      .get('paymentForm')
-      ?.get('nameOnCard')?.value;
-
-    const addressData = this.checkoutForm.get('addressForm')?.value;
-
-    const address = {
-      line1: addressData.street,
-      city: addressData.city,
-      state: addressData.state,
-      postal_code: addressData.zipCode,
-    } as stripe.BillingDetailsAddress;
-
-    const paymentData = {
-      payment_method: {
-        card: this.cardNumber,
-        billing_details: {
-          name: nameOnCard,
-          address,
-        },
-      },
-    } as stripe.ConfirmCardPaymentData;
+    const paymentData = this.createPaymentData(basket);
 
     try {
       const order = await this.checkoutService.createOrder(orderToCreate);
-      this.toastr.success('Order created');
-
-      var response = await this.stripe.confirmCardPayment(
+      var paymentResult = await this.stripe.confirmCardPayment(
         basket.clientSecret ?? '',
         paymentData
       );
 
-      if (response.paymentIntent) {
-        console.log(response.paymentIntent);
+      if (paymentResult.paymentIntent) {
         this.basketService.deleteLocalBasket(basket.id);
         const navigationExtras: NavigationExtras = { state: order };
         this.router.navigate(['checkout/success'], navigationExtras);
       } else {
-        throw new Error(response.error?.message);
+        throw new Error(paymentResult.error?.message);
       }
     } catch (error) {
       this.toastr.error(error.message, 'Payment Error');
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -172,5 +144,30 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
       deliveryMethodId,
       shipToAddress,
     };
+  }
+
+  private createPaymentData(basket: IBasket): stripe.ConfirmCardPaymentData {
+    const nameOnCard = this.checkoutForm
+      .get('paymentForm')
+      ?.get('nameOnCard')?.value;
+
+    const addressData = this.checkoutForm.get('addressForm')?.value;
+
+    const address = {
+      line1: addressData.street,
+      city: addressData.city,
+      state: addressData.state,
+      postal_code: addressData.zipCode,
+    } as stripe.BillingDetailsAddress;
+
+    return {
+      payment_method: {
+        card: this.cardNumber,
+        billing_details: {
+          name: nameOnCard,
+          address,
+        },
+      },
+    } as stripe.ConfirmCardPaymentData;
   }
 }
