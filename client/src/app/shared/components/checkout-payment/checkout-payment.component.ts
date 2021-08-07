@@ -8,6 +8,7 @@ import {
   Component,
   ElementRef,
   Input,
+  KeyValueDiffers,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
@@ -33,8 +34,13 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   cardExpiry: stripe.elements.Element = null!;
   cardCvc: stripe.elements.Element = null!;
 
-  cardError: string = null!;
-  cardHandler: stripe.elements.handler = this.onChange.bind(this);
+  cardNumberError: string = null!;
+  cardExpiryError: string = null!;
+  cardCvcError: string = null!;
+
+  cardNumberHandler: stripe.elements.handler = this.onChange.bind(this);
+  cardExpiryHandler: stripe.elements.handler = this.onChange.bind(this);
+  cardCvcHandler: stripe.elements.handler = this.onChange.bind(this);
 
   constructor(
     private basketService: BasketService,
@@ -45,7 +51,7 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.stripe = Stripe(this.stripePublicKey);
-    var elements = this.stripe.elements();
+    var elements = this.stripe.elements({ locale: 'en'});
 
     let classes = {
       base: 'stripe-element',
@@ -55,17 +61,24 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
       complete: 'complete',
     };
 
-    let options = { classes, showIcon: true };
+    let options = { classes };
 
-    this.cardNumber = elements.create('cardNumber', options);
+    this.cardNumber = elements.create('cardNumber', {
+      ...options,
+
+      showIcon: true,
+    });
+
     this.cardNumber.mount(this.cardNumberElement.nativeElement);
-    this.cardNumber.addEventListener('change', this.cardHandler);
+    this.cardNumber.addEventListener('change', this.cardNumberHandler);
 
-    this.cardExpiry = elements.create('cardExpiry');
+    this.cardExpiry = elements.create('cardExpiry', options);
     this.cardExpiry.mount(this.cardExpiryElement.nativeElement);
+    this.cardExpiry.addEventListener('change', this.cardExpiryHandler);
 
-    this.cardCvc = elements.create('cardCvc');
+    this.cardCvc = elements.create('cardCvc', options);
     this.cardCvc.mount(this.cardCvcElement.nativeElement);
+    this.cardCvc.addEventListener('change', this.cardCvcHandler);
   }
 
   ngOnDestroy(): void {
@@ -76,7 +89,21 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
 
   private onChange(response?: stripe.elements.ElementChangeResponse) {
     let error = response?.error;
-    this.cardError = error?.message ? error.message : null!;
+    let elementType = response?.elementType;
+
+    switch (elementType) {
+      case 'cardNumber':
+        this.cardNumberError = error?.message ? error.message : null!;
+        break;
+      case 'cardExpiry':
+        this.cardExpiryError = error?.message ? error.message : null!;
+        break;
+      case 'cardCvc':
+        this.cardCvcError = error?.message ? error.message : null!;
+        break;
+      default:
+        break;
+    }
   }
 
   async onSubmitOrder() {

@@ -1,5 +1,18 @@
 .stripe-element {
-  padding: 10px;
-  border: 2px solid blue;
+  &.focus {
+    background-color: lightgray;
+  }
+
+  &.complete {
+    border: 2px solid green;
+  }
+
+  &.invalid{
+    padding: 10px;
+    border: 2px solid red;
+  }
 }
 
+.card-error {
+  color: red;
+}

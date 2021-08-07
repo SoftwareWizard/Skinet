@@ -15,8 +15,14 @@
     <div class="form-group col-3">
       <div #cardCvc class="form-control py-3 card-cvc"></div>
     </div>
+    <div class="card-error pb-2">
+      <ul>
+        <li *ngIf="cardNumberError">{{ cardNumberError }}</li>
+        <li *ngIf="cardExpiryError">{{ cardExpiryError }}</li>
+        <li *ngIf="cardCvcError">{{ cardCvcError }}</li>
+      </ul>
+    </div>
   </div>
-  {{ cardError }}
 </div>
 
 <div
