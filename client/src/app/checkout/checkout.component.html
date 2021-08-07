@@ -2,11 +2,13 @@
   <div class="row">
     <div class="col-8">
       <app-stepper [linearModeSelected]="false" #appStepper>
+
         <cdk-step [label]="'Address'" [completed]="isComplete('addressForm')">
           <app-checkout-address
             [checkoutForm]="checkoutForm"
           ></app-checkout-address>
         </cdk-step>
+
         <cdk-step
           [label]="'Delivery Method'"
           [completed]="isComplete('deliveryForm')"
@@ -15,13 +17,15 @@
             [checkoutForm]="checkoutForm"
           ></app-checkout-delivery-method
         ></cdk-step>
+
         <cdk-step [label]="'Review'">
           <app-checkout-review [appStepper]="appStepper"></app-checkout-review
         ></cdk-step>
+
         <cdk-step
           [label]="'Payment'"
-          [completed]="isComplete('deliveryMethodForm')"
-          ><app-checkout-payment
+          [completed]="payment.isComplete"
+          ><app-checkout-payment #payment
             [checkoutForm]="checkoutForm"
           ></app-checkout-payment
         ></cdk-step>

@@ -43,6 +43,10 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
   public cardExpiryError: string = null!;
   public cardCvcError: string = null!;
 
+  private cardNumberComplete? = false;
+  private cardExpiryComplete? = false;
+  private cardCvcComplete? = false;
+
   public isLoading = false;
 
   private cardNumberHandler: stripe.elements.handler = this.onChange.bind(this);
@@ -94,12 +98,15 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
     switch (elementType) {
       case 'cardNumber':
         this.cardNumberError = error?.message ? error.message : null!;
+        this.cardNumberComplete = response?.complete;
         break;
       case 'cardExpiry':
         this.cardExpiryError = error?.message ? error.message : null!;
+        this.cardExpiryComplete = response?.complete;
         break;
       case 'cardCvc':
         this.cardCvcError = error?.message ? error.message : null!;
+        this.cardCvcComplete = response?.complete;
         break;
       default:
         break;
@@ -169,5 +176,13 @@ export class CheckoutPaymentComponent implements AfterViewInit, OnDestroy {
         },
       },
     } as stripe.ConfirmCardPaymentData;
+  }
+
+  public get isComplete(): boolean {
+    const paymentFormComplete = !(this.checkoutForm?.get('paymentForm')?.invalid ?? true);
+    return paymentFormComplete &&
+      (this.cardNumberComplete ?? false) &&
+      (this.cardExpiryComplete ?? false) &&
+      (this.cardCvcComplete ?? false);
   }
 }

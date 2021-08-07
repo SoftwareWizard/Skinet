@@ -31,7 +31,7 @@
   <button class="btn btn-outline-primary" cdkStepperPrevious>
     <i class="fa fa-angle-left mr-2"></i>Back to Delivery Method
   </button>
-  <button class="btn btn-outline-success" (click)="onSubmitOrder()">
+  <button [disabled]="!isComplete || isLoading" class="btn btn-outline-success" (click)="onSubmitOrder()">
     Submit Order
     <i *ngIf="isLoading" class="fa fa-spinner fa-pulse ml-2"></i>
   </button>
