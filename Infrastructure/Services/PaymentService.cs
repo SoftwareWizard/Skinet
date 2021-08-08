@@ -6,6 +6,8 @@ using Stripe;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Specifications;
+using Order = Core.Entities.OrderAggregate.Order;
 using Product = Core.Entities.Product;
 
 namespace Infrastructure.Services
@@ -87,6 +89,29 @@ namespace Infrastructure.Services
             }
 
             return basket;
+        }
+
+        public async Task<Order> UpdateOrderPaymentStatus(string paymentIntentId, string eventType)
+        {
+            var spec = new OrderByPaymentIntentIdSpecification(paymentIntentId);
+            var order = await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            order.Status = eventType switch
+            {
+                Events.PaymentIntentSucceeded => OrderStatus.PaymentReceived,
+                Events.PaymentIntentPaymentFailed => OrderStatus.PaymentFailed,
+                _ => order.Status
+            };
+
+            _unitOfWork.Repository<Order>().Update(order);
+            await _unitOfWork.Complete();
+
+            return order;
         }
     }
 }

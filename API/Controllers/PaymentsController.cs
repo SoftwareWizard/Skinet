@@ -15,12 +15,11 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class PaymentsController : ApiControllerBase
     {
         private readonly IPaymentService _paymentService;
         private readonly ILogger _logger;
-        private const string WhSecret = "";
+        private const string WhSecret = "whsec_9hAB4KDiQIEfDrAKUJzhwwgM4riSWNhl";
 
         public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger)
         {
@@ -28,6 +27,7 @@ namespace API.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpPost("{basketId}")]
         public async Task<ActionResult<CustomerBasket>> CreateOrUpdatePaymentIntent(string basketId)
         {
@@ -48,23 +48,19 @@ namespace API.Controllers
             try
             {
                 var stripeEvent = EventUtility.ConstructEvent(json, stripeSignature, WhSecret);
-                PaymentIntent paymentIntent;
-                Order order;
+                var paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
 
                 switch (stripeEvent.Type)
                 {
                     case Events.PaymentIntentSucceeded:
-                        paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
+                        await _paymentService.UpdateOrderPaymentStatus(paymentIntent.Id, stripeEvent.Type);
                         _logger.LogInformation($"Payment Intent succeeded {paymentIntent.Id} [paymentIntent.Id]");
-                        // TODO: update status
                         break;
                     case Events.PaymentIntentPaymentFailed:
-                        paymentIntent = (PaymentIntent)stripeEvent.Data.Object;
-                        _logger.LogInformation($"Payment Intent failed {paymentIntent.Id} [paymentIntent.Id]");
-                        // TODO: update status
+                        _logger.LogWarning($"Payment Intent failed {paymentIntent.Id} [paymentIntent.Id]");
+                        await _paymentService.UpdateOrderPaymentStatus(paymentIntent.Id, stripeEvent.Type);
                         break;
                 }
-
 
             }
             catch (StripeException exception)
