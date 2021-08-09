@@ -12,6 +12,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{710985F1-136B-47A7-BCAC-8C618220D835}"
 	ProjectSection(SolutionItems) = preProject
 		EntityFramework.md = EntityFramework.md
+		SkiNet.postman_collection.json = SkiNet.postman_collection.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F72E182-B063-4A17-BE72-7A332FBE841B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
